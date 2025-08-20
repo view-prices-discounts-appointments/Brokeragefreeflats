@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brokerage Free</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+    }
+    header {
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    /* Tabs */
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 60px;
+      z-index: 999;
+    }
+    .tab {
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      background: rgba(255,255,255,0.1);
+      color: #ccc;
+      transition: all 0.3s ease;
+    }
+    .tab.active {
+      background: linear-gradient(90deg, #7928CA, #FF0080);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255,0,128,0.5);
+    }
+    /* Filter Button */
+    .filter-btn {
+      margin-left: auto;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      background: linear-gradient(90deg,#00c6ff,#0072ff);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,114,255,0.6);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    /* Active Filters Chips */
+    .filters-active {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 10px;
+    }
+    .filter-chip {
+      background: rgba(255,255,255,0.2);
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filter-chip span {
+      cursor: pointer;
+      font-weight: bold;
+    }
+    /* Cards */
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 16px;
+      margin: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      animation: fadeIn 0.4s ease;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .info {
+      font-size: 14px;
+      color: #ddd;
+      margin: 3px 0;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 16px;
+      border-radius: 25px;
+      background: linear-gradient(90deg, #25D366, #128C7E);
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    /* Badges */
+    .badge-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .badge.type { background: linear-gradient(90deg,#7928CA,#2AF598); }
+    .badge.locality { background: #007bff; }
+    .badge.girls { background: #e91e63; }
+    .badge.boys { background: #4caf50; }
+    .badge.any { background: #9e9e9e; }
+    /* Post Property Strip */
+    .post-strip {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg,#25D366,#128C7E);
+      color: #fff;
+      text-align: center;
+      padding: 12px;
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    /* Filter Panel */
+    .filter-panel {
+      position: fixed;
+      bottom: -100%;
+      left: 0;
+      right: 0;
+      background: rgba(20,20,20,0.98);
+      color: #fff;
+      padding: 20px;
+      border-radius: 20px 20px 0 0;
+      transition: bottom 0.4s ease;
+      z-index: 2000;
+    }
+    .filter-panel.open { bottom: 0; }
+    .hidden { display: none; }
+    .filter-panel button {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 12px;
+      margin: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <header>Brokerage Free</header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('rent')">Rent</div>
+    <div class="tab" onclick="showTab('buy')">Buy</div>
+    <div class="tab" onclick="showTab('pg')">PG</div>
+    <div class="filter-btn" onclick="toggleFilter()">🔍 Filter</div>
+  </div>
+
+  <!-- Active Filters -->
+  <div class="filters-active" id="activeFilters"></div>
+
+  <!-- Rent -->
+  <div id="rent" class="tab-content">
+    <div class="card" data-tags="1 BHK Kothrud">
+      <div class="badge-strip">
+        <div class="badge type">1 BHK</div>
+        <div class="badge locality">Kothrud</div>
+      </div>
+      <div class="title">Sunshine Apartments</div>
+      <div class="info">💰 Rent: ₹18,000</div>
+      <div class="info">🔒 Deposit: ₹50,000</div>
+      <a href="https://wa.me/911234567890" class="btn">💬 WhatsApp Owner</a>
+    </div>
+  </div>
+
+  <!-- Buy -->
+  <div id="buy" class="tab-content hidden">
+    <div class="card" data-tags="3 BHK Viman Nagar">
+      <div class="badge-strip">
+        <div class="badge type">3 BHK</div>
+        <div class="badge locality">Viman Nagar</div>
+      </div>
+      <div class="title">Palm Residences</div>
+      <div class="info">💰 Price: ₹1.2 Cr</div>
+      <div class="info">📐 Carpet: 1200 sq.ft</div>
+      <a href="https://wa.me/911234567890" class="btn">💬 WhatsApp Owner</a>
+    </div>
+  </div>
+
+  <!-- PG -->
+  <div id="pg" class="tab-content hidden">
+    <div class="card" data-tags="PG Baner Girls">
+      <div class="badge-strip">
+        <div class="badge type">Single Sharing</div>
+        <div class="badge locality">Baner</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">PG - Cozy Stay</div>
+      <div class="info">💰 Rent: ₹9,000</div>
+      <div class="info">🔒 Deposit: ₹15,000</div>
+      <a href="https://wa.me/911234567890" class="btn">💬 WhatsApp Owner</a>
+    </div>
+  </div>
+
+  <!-- Filter Panel -->
+  <div class="filter-panel" id="filterPanel">
+    <h3>Filters</h3>
+    <button onclick="applyFilter('Kothrud')">Kothrud</button>
+    <button onclick="applyFilter('Baner')">Baner</button>
+    <button onclick="applyFilter('Girls')">Girls</button>
+    <button onclick="applyFilter('Boys')">Boys</button>
+    <button onclick="applyFilter('1 BHK')">1 BHK</button>
+    <button onclick="applyFilter('3 BHK')">3 BHK</button>
+    <button onclick="clearFilters()">Clear All</button>
+  </div>
+
+  <!-- Post Property Strip -->
+  <div class="post-strip">
+    📢 Post your property <a href="https://wa.me/911234567890" style="color:#fff;text-decoration:none;">💬 WhatsApp</a>
+  </div>
+
+  <script>
+    let activeFilters = [];
+
+    function showTab(tabId) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+      document.querySelector('.tab[onclick="showTab(\''+tabId+'\')"]').classList.add('active');
+      document.getElementById(tabId).classList.remove('hidden');
+      applyFilters(); // reapply filters when tab changes
+    }
+
+    function toggleFilter(){
+      document.getElementById('filterPanel').classList.toggle('open');
+    }
+
+    function applyFilter(name){
+      if (!activeFilters.includes(name)) {
+        activeFilters.push(name);
+        let container = document.getElementById('activeFilters');
+        let chip = document.createElement('div');
+        chip.className = 'filter-chip';
+        chip.setAttribute("data-filter", name);
+        chip.innerHTML = name + ' <span onclick="removeFilter(\''+name+'\')">✖</span>';
+        container.appendChild(chip);
+        applyFilters();
+      }
+    }
+
+    function removeFilter(name){
+      activeFilters = activeFilters.filter(f => f !== name);
+      document.querySelector('.filter-chip[data-filter="'+name+'"]').remove();
+      applyFilters();
+    }
+
+    function clearFilters(){
+      activeFilters = [];
+      document.getElementById('activeFilters').innerHTML = '';
+      applyFilters();
+    }
+
+    function applyFilters(){
+      const activeTab = document.querySelector('.tab.active').innerText.toLowerCase();
+      const cards = document.querySelectorAll('#'+activeTab+' .card');
+      let anyVisible = false;
+
+      cards.forEach(card => {
+        let tags = card.getAttribute("data-tags");
+        let match = activeFilters.every(f => tags.includes(f));
+        if (match || activeFilters.length === 0) {
+          card.style.display = "block";
+          anyVisible = true;
+        } else {
+          card.style.display = "none";
+        }
+      });
+
+      // No results message
+      if (!anyVisible) {
+        if (!document.getElementById("noResults")) {
+          let msg = document.createElement("div");
+          msg.id = "noResults";
+          msg.style.textAlign = "center";
+          msg.style.padding = "20px";
+          msg.innerText = "🚫 No results found";
+          document.getElementById(activeTab).appendChild(msg);
+        }
+      } else {
+        let msg = document.getElementById("noResults");
+        if (msg) msg.remove();
+      }
+    }
+  </script>
+</body>
+</html>
