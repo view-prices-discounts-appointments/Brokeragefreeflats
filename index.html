@@ -61,7 +61,7 @@
 
   <!-- RENT -->
   <div id="rent" class="tab-content">
-    <div class="card" data-tags="1 BHK Kothrud">
+    <div class="card" data-tags="1 BHK Kothrud" data-owner="9405571499">
       <div class="badge-strip">
         <div class="badge type">1 BHK</div>
         <div class="badge locality">Kothrud</div>
@@ -69,13 +69,13 @@
       <div class="title">Sunshine Apartments</div>
       <div class="info">💰 Rent: ₹18,000</div>
       <div class="info">🔒 Deposit: ₹50,000</div>
-      <a class="btn" onclick="openPopup('Rent','1 BHK','Kothrud')">💬 Contact Owner</a>
+      <a class="btn" onclick="openPopup('Rent','1 BHK','Kothrud', this)">💬 Contact Owner</a>
     </div>
   </div>
 
   <!-- BUY -->
   <div id="buy" class="tab-content hidden">
-    <div class="card" data-tags="3 BHK Viman Nagar">
+    <div class="card" data-tags="3 BHK Viman Nagar" data-owner="9405571499">
       <div class="badge-strip">
         <div class="badge type">3 BHK</div>
         <div class="badge locality">Viman Nagar</div>
@@ -83,13 +83,13 @@
       <div class="title">Palm Residences</div>
       <div class="info">💰 Price: ₹1.2 Cr</div>
       <div class="info">📐 Carpet: 1200 sq.ft</div>
-      <a class="btn" onclick="openPopup('Buy','3 BHK','Viman Nagar')">💬 Contact Owner</a>
+      <a class="btn" onclick="openPopup('Buy','3 BHK','Viman Nagar', this)">💬 Contact Owner</a>
     </div>
   </div>
 
   <!-- PG -->
   <div id="pg" class="tab-content hidden">
-    <div class="card" data-tags="PG Baner Girls">
+    <div class="card" data-tags="PG Baner Girls" data-owner="9405571499">
       <div class="badge-strip">
         <div class="badge type">PG</div>
         <div class="badge locality">Baner</div>
@@ -98,7 +98,7 @@
       <div class="title">PG - Cozy Stay</div>
       <div class="info">💰 Rent: ₹9,000</div>
       <div class="info">🔒 Deposit: ₹15,000</div>
-      <a class="btn" onclick="openPopup('PG','PG','Baner')">💬 Contact Owner</a>
+      <a class="btn" onclick="openPopup('PG','PG','Baner', this)">💬 Contact Owner</a>
     </div>
   </div>
 
@@ -135,10 +135,9 @@
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzC5FoRnDJm4XWhU1bM4ccw2Vs2VVjeZTJ8hJsX17aKjkWQgMRj2neKTlH4kdnYH3HZFQ/exec";
-    const OWNER_WHATSAPP = "1234567890";
 
     let activeFilters = [];
-    let actionType = null, propertyDetails = "", localityDetails = "";
+    let actionType = null, propertyDetails = "", localityDetails = "", ownerWhatsapp = "";
 
     function showTab(tabId) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -187,8 +186,12 @@
     }
 
     // ========= POPUP =========
-    function openPopup(type, property, locality) {
-      actionType = type; propertyDetails = property; localityDetails = locality;
+    function openPopup(type, property, locality, el) {
+      actionType = type; 
+      propertyDetails = property; 
+      localityDetails = locality;
+      ownerWhatsapp = el.closest('.card').dataset.owner;  // dynamic owner number
+      
       document.getElementById('userWhatsapp').value = '';
       document.getElementById('userName').value = '';
       document.getElementById('waError').textContent = '';
@@ -198,6 +201,7 @@
     }
     function openPostPopup(){
       actionType = "Post"; propertyDetails = ""; localityDetails = "";
+      ownerWhatsapp = "919405571499"; // default admin number for posting
       document.getElementById('userWhatsapp').value = '';
       document.getElementById('userName').value = '';
       document.getElementById('waError').textContent = '';
@@ -225,7 +229,7 @@
     }
 
     function redirectToOwner(message){
-      const url = "https://wa.me/" + OWNER_WHATSAPP + "?text=" + encodeURIComponent(message);
+      const url = "https://wa.me/" + ownerWhatsapp + "?text=" + encodeURIComponent(message);
       window.location.href = url;
     }
 
@@ -244,7 +248,7 @@
         type: actionType || 'Contact Owner',
         userName,
         userWhatsapp: whatsapp,
-        ownerWhatsapp: OWNER_WHATSAPP,
+        ownerWhatsapp: ownerWhatsapp,
         property: propertyDetails || '',
         locality: localityDetails || ''
       };
