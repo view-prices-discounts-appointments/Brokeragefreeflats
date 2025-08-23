@@ -54,7 +54,13 @@
   </style>
 </head>
 <body>
-  <header>Brokerage Free Flats</header>
+ <header style="display:flex;justify-content:space-between;align-items:center;padding:10px 15px;">
+  <h1 style="margin:0;">Brokerage Free Flats</h1>
+  <div id="online-count" style="font-size:14px;font-weight:bold;color:#2ecc71;">
+    🟢 0 people online
+  </div>
+</header>
+
 
   <div class="tabs">
     <div class="tab active" onclick="showTab('rent')">Rent</div>
@@ -702,5 +708,16 @@
     // ========= POST-STRIP =========
     document.getElementById('postStrip').addEventListener('click', openPostPopup);
   </script>
+<script>
+function updateOnlineCount() {
+  let count = Math.floor(Math.random() * 70) + 50; // random 50–120
+  document.getElementById("online-count").innerText =
+    "🟢 " + count + " people online";
+}
+updateOnlineCount();
+setInterval(updateOnlineCount, 8000);
+</script>
+
+
 </body>
 </html>
