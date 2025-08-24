@@ -1,65 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Brokerage Free Flats</title>
   <style>
-    body {margin:0;font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);color:#fff;}
-    header {padding:15px;text-align:center;font-size:22px;font-weight:bold;background:linear-gradient(90deg,#6a11cb,#2575fc);position:sticky;top:0;z-index:1000;}
-    .tabs {display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);position:sticky;top:60px;z-index:999;}
-    .tab {padding:8px 18px;border-radius:20px;cursor:pointer;font-weight:600;background:rgba(255,255,255,0.1);color:#ccc;transition:all .3s;}
-    .tab.active {background:linear-gradient(90deg,#7928CA,#FF0080);color:#fff;box-shadow:0 4px 12px rgba(255,0,128,0.5);}
-    .filter-btn {margin-left:auto;padding:8px 20px;border-radius:30px;font-weight:600;background:linear-gradient(90deg,#00c6ff,#0072ff);color:#fff;cursor:pointer;box-shadow:0 4px 12px rgba(0,114,255,0.6);transition:transform .2s,box-shadow .2s;display:flex;align-items:center;gap:6px;}
-    .filter-btn:hover {transform:scale(1.05);box-shadow:0 6px 16px rgba(0,114,255,0.8);}
-    .filters-active {display:flex;flex-wrap:wrap;gap:6px;padding:10px;}
-    .filter-chip {background:rgba(255,255,255,0.2);padding:5px 10px;border-radius:12px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px;}
-    .filter-chip span{cursor:pointer;font-weight:bold;}
-    .card {background:rgba(255,255,255,0.05);border-radius:20px;padding:16px;margin:16px;backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(0,0,0,0.6);animation:fadeIn .4s;}
-    .title {font-size:18px;font-weight:600;margin-bottom:8px;}
-    .info {font-size:14px;color:#ddd;margin:3px 0;}
-    .btn {display:inline-block;margin-top:12px;padding:10px 16px;border-radius:25px;background:linear-gradient(90deg,#25D366,#128C7E);color:#fff;font-weight:600;text-decoration:none;transition:all .3s;cursor:pointer;}
-    .btn:hover {opacity:.9;}
-    .badge-strip {display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
-    .badge {padding:4px 10px;border-radius:12px;font-size:12px;font-weight:600;color:#fff;}
-    .badge.type {background:linear-gradient(90deg,#7928CA,#2AF598);}
-    .badge.locality {background:#007bff;}
-    .badge.girls {background:#e91e63;}
-    .badge.boys {background:#4caf50;}
-    .badge.any {background:#9e9e9e;}
-    @keyframes fadeIn {from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-    .post-strip {position:fixed;bottom:0;left:0;right:0;background:linear-gradient(90deg,#25D366,#128C7E);color:#fff;font-weight:700;font-size:17px;display:flex;justify-content:center;align-items:center;z-index:1100;white-space:nowrap;overflow:hidden;height:46px;cursor:pointer;}
-    .post-strip span {display:inline-block;padding-left:100%;animation:slide 9s linear infinite;}
-    @keyframes slide {0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
-    .filter-panel {position:fixed;bottom:-100%;left:0;right:0;background:rgba(20,20,20,0.98);color:#fff;padding:20px;border-radius:20px 20px 0 0;transition:bottom .4s ease;z-index:2000;}
-    .filter-panel.open {bottom:0;}
-    .hidden {display:none;}
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+    }
 
-    .filter-panel button {background:rgba(255,255,255,0.1);color:#fff;padding:8px 14px;border:none;border-radius:12px;margin:4px;cursor:pointer;}
-    .filter-panel button:hover {background:linear-gradient(90deg,#7928CA,#FF0080);}
-    /* Popup */
-    .popup {position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:3000;}
-    .popup-content {background:#1b1b1f;color:#fff;padding:18px 16px 16px;border-radius:16px;width:92%;max-width:360px;box-shadow:0 10px 30px rgba(0,0,0,0.6);}
-    .popup-title {font-weight:700;font-size:18px;margin:0 0 10px;text-align:center;}
-    .popup-content input {width:100%;padding:12px 14px;margin:8px 0 4px;border:1px solid #333;border-radius:10px;background:#121218;color:#fff;font-size:16px;outline:none;box-sizing:border-box;}
-    .popup-actions {display:flex;gap:10px;margin-top:10px;}
-    .submit-btn, .cancel-btn {flex:1;padding:12px 14px;border:none;border-radius:12px;cursor:pointer;font-weight:700;font-size:15px;}
-    .submit-btn {background:linear-gradient(90deg,#25D366,#128C7E);color:#fff;}
-    .cancel-btn {background:#2b2b2f;color:#ddd;}
-    .error {color:#ff6b6b;font-size:13px;margin-top:6px;min-height:18px;text-align:center;}
- .tab-content {
+    header {
       padding: 15px;
-      padding-bottom: 120px; /* enough space for filter bar + panel */
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 60px;
+      z-index: 999;
+    }
+
+    .tab {
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ccc;
+      transition: all .3s;
+    }
+
+    .tab.active {
+      background: linear-gradient(90deg, #7928CA, #FF0080);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 0, 128, 0.5);
+    }
+
+    .filter-btn {
+      margin-left: auto;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 114, 255, 0.6);
+      transition: transform .2s, box-shadow .2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 114, 255, 0.8);
+    }
+
+    .filters-active {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 10px;
+    }
+
+    .filter-chip {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-chip span {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 16px;
+      margin: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      animation: fadeIn .4s;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .info {
+      font-size: 14px;
+      color: #ddd;
+      margin: 3px 0;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 16px;
+      border-radius: 25px;
+      background: linear-gradient(90deg, #25D366, #128C7E);
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all .3s;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      opacity: .9;
+    }
+
+    .badge-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .badge.type {
+      background: linear-gradient(90deg, #7928CA, #2AF598);
+    }
+
+    .badge.locality {
+      background: #007bff;
+    }
+
+    .badge.girls {
+      background: #e91e63;
+    }
+
+    .badge.boys {
+      background: #4caf50;
+    }
+
+    .badge.any {
+      background: #9e9e9e;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .post-strip {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, #25D366, #128C7E);
+      color: #fff;
+      font-weight: 700;
+      font-size: 17px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1100;
+      white-space: nowrap;
+      overflow: hidden;
+      height: 46px;
+      cursor: pointer;
+    }
+
+    .post-strip span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: slide 9s linear infinite;
+    }
+
+    @keyframes slide {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    .filter-panel {
+      position: fixed;
+      bottom: -100%;
+      left: 0;
+      right: 0;
+      background: rgba(20, 20, 20, 0.98);
+      color: #fff;
+      padding: 20px;
+      border-radius: 20px 20px 0 0;
+      transition: bottom .4s ease;
+      z-index: 2000;
+    }
+
+    .filter-panel.open {
+      bottom: 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .filter-panel button {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 12px;
+      margin: 4px;
+      cursor: pointer;
+    }
+
+    .filter-panel button:hover {
+      background: linear-gradient(90deg, #7928CA, #FF0080);
+    }
+
+    /* Popup */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+    }
+
+    .popup-content {
+      background: #1b1b1f;
+      color: #fff;
+      padding: 18px 16px 16px;
+      border-radius: 16px;
+      width: 92%;
+      max-width: 360px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .popup-title {
+      font-weight: 700;
+      font-size: 18px;
+      margin: 0 0 10px;
+      text-align: center;
+    }
+
+    .popup-content input {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 8px 0 4px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      background: #121218;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .popup-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .submit-btn,
+    .cancel-btn {
+      flex: 1;
+      padding: 12px 14px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .submit-btn {
+      background: linear-gradient(90deg, #25D366, #128C7E);
+      color: #fff;
+    }
+
+    .cancel-btn {
+      background: #2b2b2f;
+      color: #ddd;
+    }
+
+    .error {
+      color: #ff6b6b;
+      font-size: 13px;
+      margin-top: 6px;
+      min-height: 18px;
+      text-align: center;
+    }
+
+    .tab-content {
+      padding: 15px;
+      padding-bottom: 120px;
+      /* enough space for filter bar + panel */
     }
   </style>
 </head>
+
 <body>
-<header style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;">
-  <h2 style="margin:0;font-size:14px;font-weight:600;">Brokerage Free Flats</h2>
-  <div id="online-count" style="font-size:12px;font-weight:500;color:#2ecc71;white-space:nowrap;">
-    🟢 0 people online
-  </div>
-</header>
+  <header style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;">
+    <h2 style="margin:0;font-size:14px;font-weight:600;">Brokerage Free Flats</h2>
+    <div id="online-count" style="font-size:12px;font-weight:500;color:#2ecc71;white-space:nowrap;">
+      🟢 0 people online
+    </div>
+  </header>
 
 
 
@@ -68,478 +353,668 @@
     <div class="tab active" onclick="showTab('rent')">Rent</div>
     <div class="tab" onclick="showTab('buy')">Buy</div>
     <div class="tab" onclick="showTab('pg')">PG</div>
+    <div class="tab" onclick="showTab('commercial')">Commercial</div>
     <div class="filter-btn" onclick="toggleFilter()">🔍 Filter</div>
   </div>
   <div class="filters-active" id="activeFilters"></div>
 
   <!-- RENT -->
   <div id="rent" class="tab-content">
-   
 
-<!-- 1. Megapolis Township -->
-  <div class="card" data-tags="2 BHK Hinjewadi Phase 3" data-owner="919405571499">
-    <div class="badge-strip">
-      <div class="badge type">2 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 3</div>
-    </div>
-    <div class="title">Megapolis Township</div>
-    <div class="info">💰 Rent: ₹19,000</div>
-    <div class="info">🔒 Deposit: ₹29,000</div>
-    <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 3', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 2. Blue Ridge -->
-  <div class="card" data-tags="2 BHK Hinjewadi Phase 1" data-owner="919004466469">
-    <div class="badge-strip">
-      <div class="badge type">2 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 1</div>
+    <!-- 1. Megapolis Township -->
+    <div class="card" data-tags="2 BHK Hinjewadi Phase 3" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">2 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 3</div>
+      </div>
+      <div class="title">Megapolis Township</div>
+      <div class="info">💰 Rent: ₹19,000</div>
+      <div class="info">🔒 Deposit: ₹29,000</div>
+      <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 3', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Blue Ridge</div>
-    <div class="info">💰 Rent: ₹22,000</div>
-    <div class="info">🔒 Deposit: ₹32,000</div>
-    <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 3. Kolte Patil Life Republic -->
-  <div class="card" data-tags="2 BHK Marunji" data-owner="919405411217">
-    <div class="badge-strip">
-      <div class="badge type">2 BHK</div>
-      <div class="badge locality">Marunji</div>
+    <!-- 2. Blue Ridge -->
+    <div class="card" data-tags="2 BHK Hinjewadi Phase 1" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">2 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 1</div>
+      </div>
+      <div class="title">Blue Ridge</div>
+      <div class="info">💰 Rent: ₹22,000</div>
+      <div class="info">🔒 Deposit: ₹32,000</div>
+      <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Kolte Patil Life Republic</div>
-    <div class="info">💰 Rent: ₹17,000</div>
-    <div class="info">🔒 Deposit: ₹27,000</div>
-    <a class="btn" onclick="openPopup('Rent','2 BHK','Marunji', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 4. Xrbia Hinjewadi -->
-  <div class="card" data-tags="1 BHK Hinjewadi Phase 2" data-owner="919405571499">
-    <div class="badge-strip">
-      <div class="badge type">1 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 2</div>
+    <!-- 3. Kolte Patil Life Republic -->
+    <div class="card" data-tags="2 BHK Marunji" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">2 BHK</div>
+        <div class="badge locality">Marunji</div>
+      </div>
+      <div class="title">Kolte Patil Life Republic</div>
+      <div class="info">💰 Rent: ₹17,000</div>
+      <div class="info">🔒 Deposit: ₹27,000</div>
+      <a class="btn" onclick="openPopup('Rent','2 BHK','Marunji', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Xrbia Hinjewadi</div>
-    <div class="info">💰 Rent: ₹10,000</div>
-    <div class="info">🔒 Deposit: ₹20,000</div>
-    <a class="btn" onclick="openPopup('Rent','1 BHK','Hinjewadi Phase 2', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 5. Paranjape Blue Ridge (Villas) -->
-  <div class="card" data-tags="3 BHK Hinjewadi Phase 1" data-owner="919004466469">
-    <div class="badge-strip">
-      <div class="badge type">3 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 1</div>
+    <!-- 4. Xrbia Hinjewadi -->
+    <div class="card" data-tags="1 BHK Hinjewadi Phase 2" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">1 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 2</div>
+      </div>
+      <div class="title">Xrbia Hinjewadi</div>
+      <div class="info">💰 Rent: ₹10,000</div>
+      <div class="info">🔒 Deposit: ₹20,000</div>
+      <a class="btn" onclick="openPopup('Rent','1 BHK','Hinjewadi Phase 2', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Paranjape Blue Ridge Villas</div>
-    <div class="info">💰 Rent: ₹35,000</div>
-    <div class="info">🔒 Deposit: ₹45,000</div>
-    <a class="btn" onclick="openPopup('Rent','3 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 6. Tinsel Town -->
-  <div class="card" data-tags="2 BHK Hinjewadi Phase 2" data-owner="919405411217">
-    <div class="badge-strip">
-      <div class="badge type">2 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 2</div>
+    <!-- 5. Paranjape Blue Ridge (Villas) -->
+    <div class="card" data-tags="3 BHK Hinjewadi Phase 1" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">3 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 1</div>
+      </div>
+      <div class="title">Paranjape Blue Ridge Villas</div>
+      <div class="info">💰 Rent: ₹35,000</div>
+      <div class="info">🔒 Deposit: ₹45,000</div>
+      <a class="btn" onclick="openPopup('Rent','3 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Tinsel Town</div>
-    <div class="info">💰 Rent: ₹18,000</div>
-    <div class="info">🔒 Deposit: ₹28,000</div>
-    <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 2', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 7. Shapoorji Pallonji Joyville -->
-  <div class="card" data-tags="2 BHK Hinjewadi Phase 1" data-owner="919405571499">
-    <div class="badge-strip">
-      <div class="badge type">2 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 1</div>
+    <!-- 6. Tinsel Town -->
+    <div class="card" data-tags="2 BHK Hinjewadi Phase 2" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">2 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 2</div>
+      </div>
+      <div class="title">Tinsel Town</div>
+      <div class="info">💰 Rent: ₹18,000</div>
+      <div class="info">🔒 Deposit: ₹28,000</div>
+      <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 2', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Shapoorji Pallonji Joyville</div>
-    <div class="info">💰 Rent: ₹20,000</div>
-    <div class="info">🔒 Deposit: ₹30,000</div>
-    <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 8. Yashwin Hinjewadi -->
-  <div class="card" data-tags="2 BHK Hinjewadi Phase 2" data-owner="919004466469">
-    <div class="badge-strip">
-      <div class="badge type">2 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 2</div>
+    <!-- 7. Shapoorji Pallonji Joyville -->
+    <div class="card" data-tags="2 BHK Hinjewadi Phase 1" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">2 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 1</div>
+      </div>
+      <div class="title">Shapoorji Pallonji Joyville</div>
+      <div class="info">💰 Rent: ₹20,000</div>
+      <div class="info">🔒 Deposit: ₹30,000</div>
+      <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Yashwin Hinjewadi</div>
-    <div class="info">💰 Rent: ₹17,000</div>
-    <div class="info">🔒 Deposit: ₹27,000</div>
-    <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 2', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 9. Kasturi Eon Homes -->
-  <div class="card" data-tags="3 BHK Hinjewadi Phase 3" data-owner="919405411217">
-    <div class="badge-strip">
-      <div class="badge type">3 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 3</div>
+    <!-- 8. Yashwin Hinjewadi -->
+    <div class="card" data-tags="2 BHK Hinjewadi Phase 2" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">2 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 2</div>
+      </div>
+      <div class="title">Yashwin Hinjewadi</div>
+      <div class="info">💰 Rent: ₹17,000</div>
+      <div class="info">🔒 Deposit: ₹27,000</div>
+      <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 2', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Kasturi Eon Homes</div>
-    <div class="info">💰 Rent: ₹32,000</div>
-    <div class="info">🔒 Deposit: ₹42,000</div>
-    <a class="btn" onclick="openPopup('Rent','3 BHK','Hinjewadi Phase 3', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 10. Imperial Towers -->
-  <div class="card" data-tags="2 BHK Hinjewadi Phase 1" data-owner="919405571499">
-    <div class="badge-strip">
-      <div class="badge type">2 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 1</div>
+    <!-- 9. Kasturi Eon Homes -->
+    <div class="card" data-tags="3 BHK Hinjewadi Phase 3" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">3 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 3</div>
+      </div>
+      <div class="title">Kasturi Eon Homes</div>
+      <div class="info">💰 Rent: ₹32,000</div>
+      <div class="info">🔒 Deposit: ₹42,000</div>
+      <a class="btn" onclick="openPopup('Rent','3 BHK','Hinjewadi Phase 3', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Imperial Towers</div>
-    <div class="info">💰 Rent: ₹21,000</div>
-    <div class="info">🔒 Deposit: ₹31,000</div>
-    <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
-  </div>
+
+    <!-- 10. Imperial Towers -->
+    <div class="card" data-tags="2 BHK Hinjewadi Phase 1" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">2 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 1</div>
+      </div>
+      <div class="title">Imperial Towers</div>
+      <div class="info">💰 Rent: ₹21,000</div>
+      <div class="info">🔒 Deposit: ₹31,000</div>
+      <a class="btn" onclick="openPopup('Rent','2 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
+    </div>
 
   </div>
 
   <!-- BUY -->
   <div id="buy" class="tab-content hidden">
-   
-<!-- 1. Krisala 41 Zoy -->
-  <div class="card" data-tags="2-3 BHK Hinjewadi Phase 1" data-owner="919405571499">
-    <div class="badge-strip">
-      <div class="badge type">2-3 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 1</div>
-    </div>
-    <div class="title">Krisala 41 Zoy</div>
-    <div class="info">💰 Price: ₹75 L – ₹1.01 Cr</div>
-    <div class="info">📐 Carpet: 746–1002 sq.ft</div>
-    <a class="btn" onclick="openPopup('Buy','2-3 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 2. Menlo Hashtag Studios -->
-  <div class="card" data-tags="Studio Hinjewadi" data-owner="919004466469">
-    <div class="badge-strip">
-      <div class="badge type">Studio</div>
-      <div class="badge locality">Hinjewadi</div>
+    <!-- 1. Krisala 41 Zoy -->
+    <div class="card" data-tags="2-3 BHK Hinjewadi Phase 1" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">2-3 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 1</div>
+      </div>
+      <div class="title">Krisala 41 Zoy</div>
+      <div class="info">💰 Price: ₹75 L – ₹1.01 Cr</div>
+      <div class="info">📐 Carpet: 746–1002 sq.ft</div>
+      <a class="btn" onclick="openPopup('Buy','2-3 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Menlo Hashtag Studios</div>
-    <div class="info">💰 Price: ₹15 L – ₹20 L</div>
-    <div class="info">📐 Carpet: 181–242 sq.ft</div>
-    <a class="btn" onclick="openPopup('Buy','Studio','Hinjewadi', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 3. Anand Vrindavan -->
-  <div class="card" data-tags="1-2 BHK Hinjewadi" data-owner="919405411217">
-    <div class="badge-strip">
-      <div class="badge type">1-2 BHK</div>
-      <div class="badge locality">Hinjewadi</div>
+    <!-- 2. Menlo Hashtag Studios -->
+    <div class="card" data-tags="Studio Hinjewadi" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">Studio</div>
+        <div class="badge locality">Hinjewadi</div>
+      </div>
+      <div class="title">Menlo Hashtag Studios</div>
+      <div class="info">💰 Price: ₹15 L – ₹20 L</div>
+      <div class="info">📐 Carpet: 181–242 sq.ft</div>
+      <a class="btn" onclick="openPopup('Buy','Studio','Hinjewadi', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Anand Vrindavan</div>
-    <div class="info">💰 Price: ₹33 L – ₹65 L</div>
-    <div class="info">📐 Carpet: 411–846 sq.ft</div>
-    <a class="btn" onclick="openPopup('Buy','1-2 BHK','Hinjewadi', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 4. Lodha Panache -->
-  <div class="card" data-tags="2-5 BHK Hinjewadi Phase 1" data-owner="919405571499">
-    <div class="badge-strip">
-      <div class="badge type">2-5 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 1</div>
+    <!-- 3. Anand Vrindavan -->
+    <div class="card" data-tags="1-2 BHK Hinjewadi" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">1-2 BHK</div>
+        <div class="badge locality">Hinjewadi</div>
+      </div>
+      <div class="title">Anand Vrindavan</div>
+      <div class="info">💰 Price: ₹33 L – ₹65 L</div>
+      <div class="info">📐 Carpet: 411–846 sq.ft</div>
+      <a class="btn" onclick="openPopup('Buy','1-2 BHK','Hinjewadi', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Lodha Panache</div>
-    <div class="info">💰 Price: Starts around ₹79 L</div>
-    <div class="info">📐 Area: 700–2271 sq.ft</div>
-    <a class="btn" onclick="openPopup('Buy','2-5 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 5. Paranjape The Altius -->
-  <div class="card" data-tags="3-4 BHK Hinjewadi" data-owner="919004466469">
-    <div class="badge-strip">
-      <div class="badge type">3-4 BHK</div>
-      <div class="badge locality">Hinjewadi</div>
+    <!-- 4. Lodha Panache -->
+    <div class="card" data-tags="2-5 BHK Hinjewadi Phase 1" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">2-5 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 1</div>
+      </div>
+      <div class="title">Lodha Panache</div>
+      <div class="info">💰 Price: Starts around ₹79 L</div>
+      <div class="info">📐 Area: 700–2271 sq.ft</div>
+      <a class="btn" onclick="openPopup('Buy','2-5 BHK','Hinjewadi Phase 1', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Paranjape The Altius</div>
-    <div class="info">💰 Price: ₹1.85 Cr – ₹2.75 Cr</div>
-    <div class="info">📐 Carpet: 1388–1858 sq.ft</div>
-    <a class="btn" onclick="openPopup('Buy','3-4 BHK','Hinjewadi', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 6. Megapolis Smart Homes III – Splendour -->
-  <div class="card" data-tags="2-3 BHK Hinjewadi Phase 3" data-owner="919405411217">
-    <div class="badge-strip">
-      <div class="badge type">2-3 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 3</div>
+    <!-- 5. Paranjape The Altius -->
+    <div class="card" data-tags="3-4 BHK Hinjewadi" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">3-4 BHK</div>
+        <div class="badge locality">Hinjewadi</div>
+      </div>
+      <div class="title">Paranjape The Altius</div>
+      <div class="info">💰 Price: ₹1.85 Cr – ₹2.75 Cr</div>
+      <div class="info">📐 Carpet: 1388–1858 sq.ft</div>
+      <a class="btn" onclick="openPopup('Buy','3-4 BHK','Hinjewadi', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Megapolis Smart Homes III – Splendour</div>
-    <div class="info">💰 Price: ₹85 L – ₹89 L</div>
-    <div class="info">📐 Carpet: 1228–1290 sq.ft</div>
-    <a class="btn" onclick="openPopup('Buy','2-3 BHK','Hinjewadi Phase 3', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 7. Kasturi Eon Homes -->
-  <div class="card" data-tags="2-3 BHK Hinjewadi Phase 3" data-owner="919405571499">
-    <div class="badge-strip">
-      <div class="badge type">2-3 BHK</div>
-      <div class="badge locality">Hinjewadi Phase 3</div>
+    <!-- 6. Megapolis Smart Homes III – Splendour -->
+    <div class="card" data-tags="2-3 BHK Hinjewadi Phase 3" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">2-3 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 3</div>
+      </div>
+      <div class="title">Megapolis Smart Homes III – Splendour</div>
+      <div class="info">💰 Price: ₹85 L – ₹89 L</div>
+      <div class="info">📐 Carpet: 1228–1290 sq.ft</div>
+      <a class="btn" onclick="openPopup('Buy','2-3 BHK','Hinjewadi Phase 3', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Kasturi Eon Homes</div>
-    <div class="info">💰 Price: ₹95 L – ₹1.38 Cr</div>
-    <div class="info">📐 Carpet: 839–1150 sq.ft</div>
-    <a class="btn" onclick="openPopup('Buy','2-3 BHK','Hinjewadi Phase 3', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 8. VTP Volare -->
-  <div class="card" data-tags="2-4 BHK Hinjewadi" data-owner="919004466469">
-    <div class="badge-strip">
-      <div class="badge type">2-4 BHK</div>
-      <div class="badge locality">Hinjewadi</div>
+    <!-- 7. Kasturi Eon Homes -->
+    <div class="card" data-tags="2-3 BHK Hinjewadi Phase 3" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">2-3 BHK</div>
+        <div class="badge locality">Hinjewadi Phase 3</div>
+      </div>
+      <div class="title">Kasturi Eon Homes</div>
+      <div class="info">💰 Price: ₹95 L – ₹1.38 Cr</div>
+      <div class="info">📐 Carpet: 839–1150 sq.ft</div>
+      <a class="btn" onclick="openPopup('Buy','2-3 BHK','Hinjewadi Phase 3', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">VTP Volare</div>
-    <div class="info">💰 Price: (Approx ₹10 L less than listed)</div>
-    <div class="info">📐 Carpet: from 805 sq.ft</div>
-    <a class="btn" onclick="openPopup('Buy','2-4 BHK','Hinjewadi', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 9. Zillenia – Punawale/Ravet -->
-  <div class="card" data-tags="2-3 BHK Punawale Ravet" data-owner="919405411217">
-    <div class="badge-strip">
-      <div class="badge type">2-3 BHK</div>
-      <div class="badge locality">Punawale / Ravet</div>
+    <!-- 8. VTP Volare -->
+    <div class="card" data-tags="2-4 BHK Hinjewadi" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">2-4 BHK</div>
+        <div class="badge locality">Hinjewadi</div>
+      </div>
+      <div class="title">VTP Volare</div>
+      <div class="info">💰 Price: (Approx ₹10 L less than listed)</div>
+      <div class="info">📐 Carpet: from 805 sq.ft</div>
+      <a class="btn" onclick="openPopup('Buy','2-4 BHK','Hinjewadi', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Zillenia</div>
-    <div class="info">💰 Price: ₹3.7 Cr – ₹4.5 Cr</div>
-    <div class="info">📐 Carpet: 722–918 sq.ft</div>
-    <a class="btn" onclick="openPopup('Buy','2-3 BHK','Punawale/Ravet', this)">💬 Contact Owner</a>
-  </div>
 
-  <!-- 10. Godrej Properties GRANDE – Punawale/Ravet -->
-  <div class="card" data-tags="2-3 BHK Punawale Ravet" data-owner="919405571499">
-    <div class="badge-strip">
-      <div class="badge type">2-3 BHK</div>
-      <div class="badge locality">Punawale / Ravet</div>
+    <!-- 9. Zillenia – Punawale/Ravet -->
+    <div class="card" data-tags="2-3 BHK Punawale Ravet" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">2-3 BHK</div>
+        <div class="badge locality">Punawale / Ravet</div>
+      </div>
+      <div class="title">Zillenia</div>
+      <div class="info">💰 Price: ₹3.7 Cr – ₹4.5 Cr</div>
+      <div class="info">📐 Carpet: 722–918 sq.ft</div>
+      <a class="btn" onclick="openPopup('Buy','2-3 BHK','Punawale/Ravet', this)">💬 Contact Owner</a>
     </div>
-    <div class="title">Godrej Properties GRANDE</div>
-    <div class="info">💰 Price: ₹60 L – ₹82.7 L</div>
-    <div class="info">📐 Carpet: 625–825 sq.ft</div>
-    <a class="btn" onclick="openPopup('Buy','2-3 BHK','Punawale/Ravet', this)">💬 Contact Owner</a>
-  </div>
+
+    <!-- 10. Godrej Properties GRANDE – Punawale/Ravet -->
+    <div class="card" data-tags="2-3 BHK Punawale Ravet" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">2-3 BHK</div>
+        <div class="badge locality">Punawale / Ravet</div>
+      </div>
+      <div class="title">Godrej Properties GRANDE</div>
+      <div class="info">💰 Price: ₹60 L – ₹82.7 L</div>
+      <div class="info">📐 Carpet: 625–825 sq.ft</div>
+      <a class="btn" onclick="openPopup('Buy','2-3 BHK','Punawale/Ravet', this)">💬 Contact Owner</a>
+    </div>
 
   </div>
 
   <!-- PG -->
   <div id="pg" class="tab-content hidden">
-   
-<!-- 🔹 Hinjewadi (6) -->
-  <div class="card" data-tags="PG Hinjewadi Boys" data-owner="919405571499">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Hinjewadi</div><div class="badge boys">Boys</div></div>
-    <div class="title">Blue Nest PG</div>
-    <div class="info">💰 Rent: ₹7,200</div><div class="info">🔒 Deposit: ₹10,200</div>
-    <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
+
+    <!-- 🔹 Hinjewadi (6) -->
+    <div class="card" data-tags="PG Hinjewadi Boys" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Hinjewadi</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Blue Nest PG</div>
+      <div class="info">💰 Rent: ₹7,200</div>
+      <div class="info">🔒 Deposit: ₹10,200</div>
+      <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Hinjewadi Girls" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Hinjewadi</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Comfort Living PG</div>
+      <div class="info">💰 Rent: ₹8,200</div>
+      <div class="info">🔒 Deposit: ₹11,200</div>
+      <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Hinjewadi Boys" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Hinjewadi</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Prime Stay PG</div>
+      <div class="info">💰 Rent: ₹7,800</div>
+      <div class="info">🔒 Deposit: ₹10,800</div>
+      <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Hinjewadi Girls" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Hinjewadi</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Sunshine PG</div>
+      <div class="info">💰 Rent: ₹8,500</div>
+      <div class="info">🔒 Deposit: ₹11,500</div>
+      <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Hinjewadi Boys" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Hinjewadi</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Royal Comfort PG</div>
+      <div class="info">💰 Rent: ₹7,500</div>
+      <div class="info">🔒 Deposit: ₹10,500</div>
+      <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Hinjewadi Girls" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Hinjewadi</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Dream Nest PG</div>
+      <div class="info">💰 Rent: ₹8,100</div>
+      <div class="info">🔒 Deposit: ₹11,100</div>
+      <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
+    </div>
+
+    <!-- 🔹 Wakad (6) -->
+    <div class="card" data-tags="PG Wakad Boys" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Wakad</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Elite Stay PG</div>
+      <div class="info">💰 Rent: ₹7,700</div>
+      <div class="info">🔒 Deposit: ₹10,700</div>
+      <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Wakad Girls" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Wakad</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Pearl Homes PG</div>
+      <div class="info">💰 Rent: ₹8,700</div>
+      <div class="info">🔒 Deposit: ₹11,700</div>
+      <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Wakad Boys" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Wakad</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Silver Nest PG</div>
+      <div class="info">💰 Rent: ₹7,400</div>
+      <div class="info">🔒 Deposit: ₹10,400</div>
+      <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Wakad Girls" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Wakad</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Lavish Living PG</div>
+      <div class="info">💰 Rent: ₹8,300</div>
+      <div class="info">🔒 Deposit: ₹11,300</div>
+      <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Wakad Boys" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Wakad</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Urban Heights PG</div>
+      <div class="info">💰 Rent: ₹7,900</div>
+      <div class="info">🔒 Deposit: ₹10,900</div>
+      <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Wakad Girls" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Wakad</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Green Valley PG</div>
+      <div class="info">💰 Rent: ₹8,500</div>
+      <div class="info">🔒 Deposit: ₹11,500</div>
+      <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
+    </div>
+
+    <!-- 🔹 Ravet (6) -->
+    <div class="card" data-tags="PG Ravet Boys" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Ravet</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Skyline PG</div>
+      <div class="info">💰 Rent: ₹7,400</div>
+      <div class="info">🔒 Deposit: ₹10,400</div>
+      <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Ravet Girls" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Ravet</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Lotus PG</div>
+      <div class="info">💰 Rent: ₹8,200</div>
+      <div class="info">🔒 Deposit: ₹11,200</div>
+      <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Ravet Boys" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Ravet</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Dream Palace PG</div>
+      <div class="info">💰 Rent: ₹7,600</div>
+      <div class="info">🔒 Deposit: ₹10,600</div>
+      <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Ravet Girls" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Ravet</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Shree Comfort PG</div>
+      <div class="info">💰 Rent: ₹8,100</div>
+      <div class="info">🔒 Deposit: ₹11,100</div>
+      <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Ravet Boys" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Ravet</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Classic Stay PG</div>
+      <div class="info">💰 Rent: ₹7,800</div>
+      <div class="info">🔒 Deposit: ₹10,800</div>
+      <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Ravet Girls" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Ravet</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Elegant Nest PG</div>
+      <div class="info">💰 Rent: ₹8,300</div>
+      <div class="info">🔒 Deposit: ₹11,300</div>
+      <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
+    </div>
+
+    <!-- 🔹 Punawale (6) -->
+    <div class="card" data-tags="PG Punawale Boys" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Punawale</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Green Nest PG</div>
+      <div class="info">💰 Rent: ₹7,600</div>
+      <div class="info">🔒 Deposit: ₹10,600</div>
+      <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Punawale Girls" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Punawale</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Serene Stay PG</div>
+      <div class="info">💰 Rent: ₹8,400</div>
+      <div class="info">🔒 Deposit: ₹11,400</div>
+      <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Punawale Boys" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Punawale</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Royal Heights PG</div>
+      <div class="info">💰 Rent: ₹7,900</div>
+      <div class="info">🔒 Deposit: ₹10,900</div>
+      <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Punawale Girls" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Punawale</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Lavender PG</div>
+      <div class="info">💰 Rent: ₹8,600</div>
+      <div class="info">🔒 Deposit: ₹11,600</div>
+      <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Punawale Boys" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Punawale</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Cozy Stay PG</div>
+      <div class="info">💰 Rent: ₹7,500</div>
+      <div class="info">🔒 Deposit: ₹10,500</div>
+      <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Punawale Girls" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Punawale</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Elite Living PG</div>
+      <div class="info">💰 Rent: ₹8,200</div>
+      <div class="info">🔒 Deposit: ₹11,200</div>
+      <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
+    </div>
+
+    <!-- 🔹 Pimple Saudagar (6) -->
+    <div class="card" data-tags="PG Pimple Saudagar Boys" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Pimple Saudagar</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Urban Life PG</div>
+      <div class="info">💰 Rent: ₹7,900</div>
+      <div class="info">🔒 Deposit: ₹10,900</div>
+      <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Pimple Saudagar Girls" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Pimple Saudagar</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Harmony PG</div>
+      <div class="info">💰 Rent: ₹8,500</div>
+      <div class="info">🔒 Deposit: ₹11,500</div>
+      <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Pimple Saudagar Boys" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Pimple Saudagar</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">Silver Oak PG</div>
+      <div class="info">💰 Rent: ₹7,600</div>
+      <div class="info">🔒 Deposit: ₹10,600</div>
+      <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Pimple Saudagar Girls" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Pimple Saudagar</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Blossom PG</div>
+      <div class="info">💰 Rent: ₹8,400</div>
+      <div class="info">🔒 Deposit: ₹11,400</div>
+      <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Pimple Saudagar Boys" data-owner="919405411217">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Pimple Saudagar</div>
+        <div class="badge boys">Boys</div>
+      </div>
+      <div class="title">City Comfort PG</div>
+      <div class="info">💰 Rent: ₹7,800</div>
+      <div class="info">🔒 Deposit: ₹10,800</div>
+      <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
+    </div>
+
+    <div class="card" data-tags="PG Pimple Saudagar Girls" data-owner="919004466469">
+      <div class="badge-strip">
+        <div class="badge type">PG</div>
+        <div class="badge locality">Pimple Saudagar</div>
+        <div class="badge girls">Girls</div>
+      </div>
+      <div class="title">Orchid Ladies PG</div>
+      <div class="info">💰 Rent: ₹8,600</div>
+      <div class="info">🔒 Deposit: ₹11,600</div>
+      <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
+    </div>
+
   </div>
 
-  <div class="card" data-tags="PG Hinjewadi Girls" data-owner="919004466469">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Hinjewadi</div><div class="badge girls">Girls</div></div>
-    <div class="title">Comfort Living PG</div>
-    <div class="info">💰 Rent: ₹8,200</div><div class="info">🔒 Deposit: ₹11,200</div>
-    <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
-  </div>
+  <div id="commercial" class="tab-content hidden">
+    <!-- 1. Megapolis Township -->
+    <div class="card" data-tags="Office Space Hinjewadi Phase 3" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">Office Space</div>
+        <div class="badge locality">Hinjewadi Phase 3</div>
+      </div>
+      <div class="title">Godrej 24 Township</div>
+      <div class="info">💰 Rent: ₹15,000</div>
+      <div class="info">🔒 Deposit: ₹30,000</div>
+      <a class="btn" onclick="openPopup('commercial','Office Space','Hinjewadi Phase 3', this)">💬 Contact Owner</a>
+    </div>
 
-  <div class="card" data-tags="PG Hinjewadi Boys" data-owner="919405411217">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Hinjewadi</div><div class="badge boys">Boys</div></div>
-    <div class="title">Prime Stay PG</div>
-    <div class="info">💰 Rent: ₹7,800</div><div class="info">🔒 Deposit: ₹10,800</div>
-    <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
-  </div>
+    <!-- 10. Imperial Towers -->
+    <div class="card" data-tags="Co-Working Spaces Hinjewadi Phase 1" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">Co-working</div>
+        <div class="badge locality">Tathwade</div>
+      </div>
+      <div class="title">Insignia</div>
+      <div class="info">💰 Rent: ₹30,000</div>
+      <div class="info">🔒 Deposit: ₹100,000</div>
+      <a class="btn" onclick="openPopup('commercial','Co-working','Tathwade', this)">💬 Contact Owner</a>
+    </div>
 
-  <div class="card" data-tags="PG Hinjewadi Girls" data-owner="919405571499">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Hinjewadi</div><div class="badge girls">Girls</div></div>
-    <div class="title">Sunshine PG</div>
-    <div class="info">💰 Rent: ₹8,500</div><div class="info">🔒 Deposit: ₹11,500</div>
-    <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Hinjewadi Boys" data-owner="919004466469">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Hinjewadi</div><div class="badge boys">Boys</div></div>
-    <div class="title">Royal Comfort PG</div>
-    <div class="info">💰 Rent: ₹7,500</div><div class="info">🔒 Deposit: ₹10,500</div>
-    <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Hinjewadi Girls" data-owner="919405411217">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Hinjewadi</div><div class="badge girls">Girls</div></div>
-    <div class="title">Dream Nest PG</div>
-    <div class="info">💰 Rent: ₹8,100</div><div class="info">🔒 Deposit: ₹11,100</div>
-    <a class="btn" onclick="openPopup('PG','PG','Hinjewadi', this)">💬 Contact Owner</a>
-  </div>
-
-  <!-- 🔹 Wakad (6) -->
-  <div class="card" data-tags="PG Wakad Boys" data-owner="919405571499">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Wakad</div><div class="badge boys">Boys</div></div>
-    <div class="title">Elite Stay PG</div>
-    <div class="info">💰 Rent: ₹7,700</div><div class="info">🔒 Deposit: ₹10,700</div>
-    <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Wakad Girls" data-owner="919004466469">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Wakad</div><div class="badge girls">Girls</div></div>
-    <div class="title">Pearl Homes PG</div>
-    <div class="info">💰 Rent: ₹8,700</div><div class="info">🔒 Deposit: ₹11,700</div>
-    <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Wakad Boys" data-owner="919405411217">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Wakad</div><div class="badge boys">Boys</div></div>
-    <div class="title">Silver Nest PG</div>
-    <div class="info">💰 Rent: ₹7,400</div><div class="info">🔒 Deposit: ₹10,400</div>
-    <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Wakad Girls" data-owner="919004466469">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Wakad</div><div class="badge girls">Girls</div></div>
-    <div class="title">Lavish Living PG</div>
-    <div class="info">💰 Rent: ₹8,300</div><div class="info">🔒 Deposit: ₹11,300</div>
-    <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Wakad Boys" data-owner="919405571499">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Wakad</div><div class="badge boys">Boys</div></div>
-    <div class="title">Urban Heights PG</div>
-    <div class="info">💰 Rent: ₹7,900</div><div class="info">🔒 Deposit: ₹10,900</div>
-    <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Wakad Girls" data-owner="919405411217">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Wakad</div><div class="badge girls">Girls</div></div>
-    <div class="title">Green Valley PG</div>
-    <div class="info">💰 Rent: ₹8,500</div><div class="info">🔒 Deposit: ₹11,500</div>
-    <a class="btn" onclick="openPopup('PG','PG','Wakad', this)">💬 Contact Owner</a>
-  </div>
-
-  <!-- 🔹 Ravet (6) -->
-  <div class="card" data-tags="PG Ravet Boys" data-owner="919004466469">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Ravet</div><div class="badge boys">Boys</div></div>
-    <div class="title">Skyline PG</div>
-    <div class="info">💰 Rent: ₹7,400</div><div class="info">🔒 Deposit: ₹10,400</div>
-    <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Ravet Girls" data-owner="919405571499">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Ravet</div><div class="badge girls">Girls</div></div>
-    <div class="title">Lotus PG</div>
-    <div class="info">💰 Rent: ₹8,200</div><div class="info">🔒 Deposit: ₹11,200</div>
-    <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Ravet Boys" data-owner="919405411217">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Ravet</div><div class="badge boys">Boys</div></div>
-    <div class="title">Dream Palace PG</div>
-    <div class="info">💰 Rent: ₹7,600</div><div class="info">🔒 Deposit: ₹10,600</div>
-    <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Ravet Girls" data-owner="919004466469">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Ravet</div><div class="badge girls">Girls</div></div>
-    <div class="title">Shree Comfort PG</div>
-    <div class="info">💰 Rent: ₹8,100</div><div class="info">🔒 Deposit: ₹11,100</div>
-    <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Ravet Boys" data-owner="919405571499">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Ravet</div><div class="badge boys">Boys</div></div>
-    <div class="title">Classic Stay PG</div>
-    <div class="info">💰 Rent: ₹7,800</div><div class="info">🔒 Deposit: ₹10,800</div>
-    <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Ravet Girls" data-owner="919405411217">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Ravet</div><div class="badge girls">Girls</div></div>
-    <div class="title">Elegant Nest PG</div>
-    <div class="info">💰 Rent: ₹8,300</div><div class="info">🔒 Deposit: ₹11,300</div>
-    <a class="btn" onclick="openPopup('PG','PG','Ravet', this)">💬 Contact Owner</a>
-  </div>
-
-  <!-- 🔹 Punawale (6) -->
-  <div class="card" data-tags="PG Punawale Boys" data-owner="919405571499">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Punawale</div><div class="badge boys">Boys</div></div>
-    <div class="title">Green Nest PG</div>
-    <div class="info">💰 Rent: ₹7,600</div><div class="info">🔒 Deposit: ₹10,600</div>
-    <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Punawale Girls" data-owner="919004466469">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Punawale</div><div class="badge girls">Girls</div></div>
-    <div class="title">Serene Stay PG</div>
-    <div class="info">💰 Rent: ₹8,400</div><div class="info">🔒 Deposit: ₹11,400</div>
-    <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Punawale Boys" data-owner="919405411217">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Punawale</div><div class="badge boys">Boys</div></div>
-    <div class="title">Royal Heights PG</div>
-    <div class="info">💰 Rent: ₹7,900</div><div class="info">🔒 Deposit: ₹10,900</div>
-    <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Punawale Girls" data-owner="919405571499">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Punawale</div><div class="badge girls">Girls</div></div>
-    <div class="title">Lavender PG</div>
-    <div class="info">💰 Rent: ₹8,600</div><div class="info">🔒 Deposit: ₹11,600</div>
-    <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Punawale Boys" data-owner="919405411217">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Punawale</div><div class="badge boys">Boys</div></div>
-    <div class="title">Cozy Stay PG</div>
-    <div class="info">💰 Rent: ₹7,500</div><div class="info">🔒 Deposit: ₹10,500</div>
-    <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Punawale Girls" data-owner="919004466469">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Punawale</div><div class="badge girls">Girls</div></div>
-    <div class="title">Elite Living PG</div>
-    <div class="info">💰 Rent: ₹8,200</div><div class="info">🔒 Deposit: ₹11,200</div>
-    <a class="btn" onclick="openPopup('PG','PG','Punawale', this)">💬 Contact Owner</a>
-  </div>
-
-  <!-- 🔹 Pimple Saudagar (6) -->
-  <div class="card" data-tags="PG Pimple Saudagar Boys" data-owner="919405571499">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Pimple Saudagar</div><div class="badge boys">Boys</div></div>
-    <div class="title">Urban Life PG</div>
-    <div class="info">💰 Rent: ₹7,900</div><div class="info">🔒 Deposit: ₹10,900</div>
-    <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Pimple Saudagar Girls" data-owner="919405411217">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Pimple Saudagar</div><div class="badge girls">Girls</div></div>
-    <div class="title">Harmony PG</div>
-    <div class="info">💰 Rent: ₹8,500</div><div class="info">🔒 Deposit: ₹11,500</div>
-    <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Pimple Saudagar Boys" data-owner="919004466469">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Pimple Saudagar</div><div class="badge boys">Boys</div></div>
-    <div class="title">Silver Oak PG</div>
-    <div class="info">💰 Rent: ₹7,600</div><div class="info">🔒 Deposit: ₹10,600</div>
-    <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Pimple Saudagar Girls" data-owner="919405571499">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Pimple Saudagar</div><div class="badge girls">Girls</div></div>
-    <div class="title">Blossom PG</div>
-    <div class="info">💰 Rent: ₹8,400</div><div class="info">🔒 Deposit: ₹11,400</div>
-    <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Pimple Saudagar Boys" data-owner="919405411217">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Pimple Saudagar</div><div class="badge boys">Boys</div></div>
-    <div class="title">City Comfort PG</div>
-    <div class="info">💰 Rent: ₹7,800</div><div class="info">🔒 Deposit: ₹10,800</div>
-    <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
-  </div>
-
-  <div class="card" data-tags="PG Pimple Saudagar Girls" data-owner="919004466469">
-    <div class="badge-strip"><div class="badge type">PG</div><div class="badge locality">Pimple Saudagar</div><div class="badge girls">Girls</div></div>
-    <div class="title">Orchid Ladies PG</div>
-    <div class="info">💰 Rent: ₹8,600</div><div class="info">🔒 Deposit: ₹11,600</div>
-    <a class="btn" onclick="openPopup('PG','PG','Pimple Saudagar', this)">💬 Contact Owner</a>
-  </div>
+     <!-- 10. Imperial Towers -->
+    <div class="card" data-tags="Shop Wakad" data-owner="919405571499">
+      <div class="badge-strip">
+        <div class="badge type">Shop</div>
+        <div class="badge locality">Wakad</div>
+      </div>
+      <div class="title">VJ Yashone</div>
+      <div class="info">💰 Rent: ₹28,000</div>
+      <div class="info">🔒 Deposit: ₹60,000</div>
+      <a class="btn" onclick="openPopup('commercial','Shop','Wakad', this)">💬 Contact Owner</a>
+    </div>
 
   </div>
 
@@ -587,9 +1062,9 @@
       document.getElementById(tabId).classList.remove('hidden');
       applyFilters();
     }
-    function toggleFilter(){ document.getElementById('filterPanel').classList.toggle('open'); }
-    function applyFilter(name){
-      if(!activeFilters.includes(name)){
+    function toggleFilter() { document.getElementById('filterPanel').classList.toggle('open'); }
+    function applyFilter(name) {
+      if (!activeFilters.includes(name)) {
         activeFilters.push(name);
         const chip = document.createElement('div');
         chip.className = 'filter-chip'; chip.dataset.filter = name;
@@ -598,14 +1073,14 @@
         applyFilters();
       }
     }
-    function removeFilter(name){
+    function removeFilter(name) {
       activeFilters = activeFilters.filter(f => f !== name);
       const el = document.querySelector(`.filter-chip[data-filter="${name}"]`);
       if (el) el.remove();
       applyFilters();
     }
-    function clearFilters(){ activeFilters=[]; document.getElementById('activeFilters').innerHTML=''; applyFilters(); }
-    function applyFilters(){
+    function clearFilters() { activeFilters = []; document.getElementById('activeFilters').innerHTML = ''; applyFilters(); }
+    function applyFilters() {
       const activeTab = document.querySelector('.tab.active').innerText.toLowerCase();
       const cards = document.querySelectorAll(`#${activeTab} .card`);
       let anyVisible = false;
@@ -613,34 +1088,34 @@
         const tags = card.getAttribute("data-tags") || "";
         const match = activeFilters.every(f => tags.includes(f));
         card.style.display = (match || activeFilters.length === 0) ? 'block' : 'none';
-        if(card.style.display==='block') anyVisible = true;
+        if (card.style.display === 'block') anyVisible = true;
       });
       let noRes = document.getElementById("noResults");
-      if(!anyVisible){
-        if(!noRes){
+      if (!anyVisible) {
+        if (!noRes) {
           noRes = document.createElement('div');
-          noRes.id='noResults'; noRes.style.textAlign='center'; noRes.style.padding='20px';
+          noRes.id = 'noResults'; noRes.style.textAlign = 'center'; noRes.style.padding = '20px';
           noRes.innerText = '🚫 No results found — adjust filters above.';
           document.getElementById(activeTab).appendChild(noRes);
         }
-      } else if(noRes){ noRes.remove(); }
+      } else if (noRes) { noRes.remove(); }
     }
 
     // ========= POPUP =========
     function openPopup(type, property, locality, el) {
-      actionType = type; 
-      propertyDetails = property; 
+      actionType = type;
+      propertyDetails = property;
       localityDetails = locality;
       ownerWhatsapp = el.closest('.card').dataset.owner;  // dynamic owner number
-      
+
       document.getElementById('userWhatsapp').value = '';
       document.getElementById('userName').value = '';
       document.getElementById('waError').textContent = '';
       document.getElementById('popupTitle').textContent = "Enter WhatsApp Number";
       document.getElementById('whatsappPopup').style.display = 'flex';
-      setTimeout(()=> document.getElementById('userWhatsapp').focus(), 0);
+      setTimeout(() => document.getElementById('userWhatsapp').focus(), 0);
     }
-    function openPostPopup(){
+    function openPostPopup() {
       actionType = "Post"; propertyDetails = ""; localityDetails = "";
       ownerWhatsapp = "919356259467"; // default admin number for posting
       document.getElementById('userWhatsapp').value = '';
@@ -648,14 +1123,14 @@
       document.getElementById('waError').textContent = '';
       document.getElementById('popupTitle').textContent = "Enter WhatsApp to Post Property";
       document.getElementById('whatsappPopup').style.display = 'flex';
-      setTimeout(()=> document.getElementById('userWhatsapp').focus(), 0);
+      setTimeout(() => document.getElementById('userWhatsapp').focus(), 0);
     }
-    function closePopup(){ document.getElementById('whatsappPopup').style.display = 'none'; }
+    function closePopup() { document.getElementById('whatsappPopup').style.display = 'none'; }
 
     async function postJSONWithFallback(url, payload) {
       try {
         const controller = new AbortController();
-        const t = setTimeout(()=>controller.abort(), 8000);
+        const t = setTimeout(() => controller.abort(), 8000);
         const res = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -663,23 +1138,23 @@
           signal: controller.signal
         });
         clearTimeout(t);
-        try { await res.json(); } catch(_) {}
+        try { await res.json(); } catch (_) { }
       } catch (e) {
-        try { navigator.sendBeacon(url, new Blob([JSON.stringify(payload)], {type:"text/plain"})); } catch(_) {}
+        try { navigator.sendBeacon(url, new Blob([JSON.stringify(payload)], { type: "text/plain" })); } catch (_) { }
       }
     }
 
-    function redirectToOwner(message){
+    function redirectToOwner(message) {
       const url = "https://wa.me/" + ownerWhatsapp + "?text=" + encodeURIComponent(message);
       window.location.href = url;
     }
 
-    async function submitLead(){
+    async function submitLead() {
       const userName = (document.getElementById('userName').value || '').trim();
       const whatsapp = (document.getElementById('userWhatsapp').value || '').trim();
       const errEl = document.getElementById('waError');
 
-      if(!/^\d{10}$/.test(whatsapp)){
+      if (!/^\d{10}$/.test(whatsapp)) {
         errEl.textContent = '❌ Enter a valid 10-digit WhatsApp number';
         return;
       }
@@ -697,7 +1172,7 @@
       postJSONWithFallback(API_URL, payload);
 
       let msg = "";
-      if(actionType === "Post"){
+      if (actionType === "Post") {
         msg = "Hi, I want to post my property on Brokerage Free.";
       } else {
         msg = `Hi, I'm interested in ${propertyDetails || 'your property'} at ${localityDetails || ''}`;
@@ -710,18 +1185,19 @@
     // ========= POST-STRIP =========
     document.getElementById('postStrip').addEventListener('click', openPostPopup);
   </script>
-<script>
-function updateOnlineCount() {
-  let count = Math.floor(Math.random() * 70) + 50; // random 50–120
-  document.getElementById("online-count").innerText =
-    "🟢 " + count + " people online";
-}
-updateOnlineCount();
-setInterval(updateOnlineCount, 8000);
-</script>
+  <script>
+    function updateOnlineCount() {
+      let count = Math.floor(Math.random() * 70) + 50; // random 50–120
+      document.getElementById("online-count").innerText =
+        "🟢 " + count + " people online";
+    }
+    updateOnlineCount();
+    setInterval(updateOnlineCount, 8000);
+  </script>
 
 
 
 
 </body>
+
 </html>
